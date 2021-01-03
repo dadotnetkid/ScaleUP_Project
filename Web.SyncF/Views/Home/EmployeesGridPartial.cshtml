@@ -1,0 +1,16 @@
+﻿@model IEnumerable<Employees>
+<ejs-grid id="grid"
+          toolbar="@(new List<string>() { "Add", "Edit", "Delete", "Update", "Cancel","Search" })"
+          dataSource="@Model"
+          allowSorting="true"
+          >
+    <e-grid-pagesettings/>
+   
+    <e-grid-editSettings allowAdding="true" allowDeleting="true" allowEditing="true" mode="Normal"></e-grid-editSettings>
+    <e-grid-columns>
+        <e-grid-column field="FirstName"/>
+        <e-grid-column field="MiddleName"/>
+        <e-grid-column field="LastName"/>
+    </e-grid-columns>
+</ejs-grid>
+<ejs-scripts></ejs-scripts>

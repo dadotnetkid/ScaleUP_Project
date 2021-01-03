@@ -1,0 +1,79 @@
+﻿@model IEnumerable<Employees>
+<ejs-grid id="grid"
+          toolbar="@(new List<string>() {"Add", "Edit", "Delete", "Update", "Cancel", "Search"})"
+          dataSource="@Model"
+          allowSorting="true"
+          beginEdit="beginEdit"
+          actionBegin="actionBegin">
+    <e-grid-pagesettings />
+
+    <e-grid-editSettings allowAdding="true" allowDeleting="true"
+                         allowEditing="true" mode="Normal">
+    </e-grid-editSettings>
+    <e-grid-columns>
+        <e-grid-column field="FirstName" />
+        <e-grid-column field="MiddleName" />
+        <e-grid-column field="LastName" />
+    </e-grid-columns>
+</ejs-grid>
+
+<script>
+    function actionBegin(args) {
+        console.log(args);
+        if (args.action === "add") {
+            add(args.data);
+        }
+        if (args.action === "edit") {
+            Edit(args.data)
+        }
+        if (args.requestType === "delete") {
+            var c = confirm("Do you want to delete this item");
+            if (c == true) {
+                DeleteItem(args.data[0]);
+            }else {
+                args.cancel = true;
+            }
+        } 
+    }
+
+    function beginEdit(args) {
+        console.log(args);
+    }
+
+    function actionComplete(args) {
+        console.log(args);
+    }
+
+    function add(data) {
+        $.ajax({
+            url: "@Url.Action("AddEmployeesGridPartial")",
+            data: data,
+            success: function(html) {
+                $('#container').html(html);
+            }
+        })
+    }
+
+    function Edit(data) {
+
+        $.ajax({
+            url: "@Url.Action("EditEmployeesGridPartial")",
+            data: data,
+            success: function(html) {
+                $('#container').html(html);
+            }
+        })
+    }
+    function DeleteItem(data) {
+
+        $.ajax({
+            url: "@Url.Action("DeleteEmployeesGridPartial")",
+            data: data,
+            success: function(html) {
+                $('#container').html(html);
+            }
+        })
+    }
+</script>
+
+<ejs-scripts></ejs-scripts>

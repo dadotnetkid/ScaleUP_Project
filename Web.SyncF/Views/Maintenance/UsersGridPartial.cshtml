@@ -1,0 +1,98 @@
+﻿@model List<UsersVM>
+
+<ejs-grid id="grid-users"
+          toolbar="@(new List<string>() {"Add", "Edit", "Delete", "Update", "Cancel", "Search"})"
+          dataSource="Model"
+          actionBegin="actionBegin"
+          beginEdit="beginEdit"
+          actionComplete="actionComplete">
+    <e-grid-editSettings allowAdding="true" allowDeleting="true"
+                         allowEditing="true" mode="Dialog" template="#add-new-template">
+    </e-grid-editSettings>
+    <e-grid-columns>
+        <e-grid-column field="UserName"/>
+        <e-grid-column field="Email"/>
+        <e-grid-column field="Password"/>
+    </e-grid-columns>
+</ejs-grid>
+<script id="add-new-template" type="text/x-template">
+    <div id="add-edit-container"></div>
+</script>
+<script>
+    function actionComplete(args) {
+        // console.log(args);
+        if (args.requestType === "save") {
+            if (args.action === "edit") {
+                Edit(args.data);
+            }
+        }
+    }
+
+    function actionBegin(args) {
+        console.log(args);
+        if (args.requestType === "save") {
+            if (args.action === "add") {
+                Add(args.data);
+            }
+            if (args.action === "edit") {
+                Edit(args.data);
+            }
+           
+        }
+        else if (args.requestType === "delete") {
+            if (confirm("Do you want to delete this item") === true) {
+                Delete(args.data[0]);
+            } else {
+                args.cancel = true;
+            }
+            
+        }
+        else {
+            beginEdit(args.rowData);
+        }
+
+    }
+
+    function Delete(data) {
+        $.ajax({
+            url: '@Url.Action("DeleteUsersGridPartial")',
+            data: data,
+            success:function(html) {
+                $('#container').html(html);
+            }
+        })
+    }
+
+    function Edit(data) {
+        $.ajax({
+            url: '@Url.Action("EditUsersGridPartial")',
+            data: data,
+            success:function(html) {
+                $('#container').html(html);
+            }
+        })
+    }
+
+    function Add(data) {
+        $.ajax({
+            url: '@Url.Action("AddUsersGridPartial")',
+            data: data,
+            success:function(html) {
+                $('#container').html(html);
+            }
+        })
+    }
+
+    function beginEdit(data) {
+        var container = $('#add-edit-container');
+        $.ajax({
+            url: "@Url.Action("AddEditUserPartial")",
+            data: { Id: data.Id },
+            success: function(html) {
+                $('#add-edit-container').html(html);
+            }
+        });
+    }
+</script>
+
+<ejs-scripts></ejs-scripts>

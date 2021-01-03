@@ -1,0 +1,30 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div id="container">
+    @await Html.PartialAsync("EmployeesGridPartial")
+</div>
+
+@section Scripts{
+    <script>
+        $(document).ready(function() {
+            load();
+        })
+
+        function load() {
+            /*/*
+        var ajax = new ej.base.Ajax()
+        ajax.send().then((data) => {
+            $('#container').html(data);
+        });
+* /*/
+            $.ajax({
+                url: "@Url.Action("EmployeesGridPartial")",
+                success: function(data) {
+                    $('#container').html(data);
+                }
+            })
+        }
+    </script>
+}
