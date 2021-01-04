@@ -69,8 +69,15 @@ namespace Web.SyncF.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(InputModel item)
         {
-            var user = new IdentityUser { UserName = item.Email, Email = item.Email };
+            var user = new IdentityUser { UserName = item.Email, Email = item.Email,EmailConfirmed=true };
             var result = await userManager.CreateAsync(user, item.Password);
+            if (result.Succeeded)
+            {
+                await signInManager.PasswordSignInAsync(item.Email, item.Password, false,false);
+                return RedirectToAction("Index", "Employees");
+            }
+
+            
             return View();
         }
 

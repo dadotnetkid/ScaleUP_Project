@@ -31,6 +31,12 @@ namespace Web.SyncF.Controllers
             return PartialView(model);
         }
 
+        public IActionResult AddEditEmployeesPartial(int employeeId)
+        {
+            var model = db.Employees.FirstOrDefault(x => x.Id == employeeId);
+            return PartialView(model);
+        }
+
         public IActionResult AddEmployeesGridPartial(Employees item)
         {
             db.Employees.Add(item);

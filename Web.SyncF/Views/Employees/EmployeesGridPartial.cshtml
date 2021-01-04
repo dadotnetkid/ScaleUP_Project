@@ -8,7 +8,7 @@
     <e-grid-pagesettings />
 
     <e-grid-editSettings allowAdding="true" allowDeleting="true"
-                         allowEditing="true" mode="Normal">
+                         allowEditing="true" mode="Normal" template="#x-template">
     </e-grid-editSettings>
     <e-grid-columns>
         <e-grid-column field="FirstName" />
@@ -16,10 +16,21 @@
         <e-grid-column field="LastName" />
     </e-grid-columns>
 </ejs-grid>
-
+<script id="x-template" type="text/x-template">
+    <div id="add-edit-template"></div>
+</script>
 <script>
     function actionBegin(args) {
         console.log(args);
+        if (args.requestType === "add" || args.requestType === "beginEdit") {
+            $.ajax({
+                url: "@Url.Action("AddEditEmployeesPartial")",
+                data: {employeeId:args.rowData.Id},
+                success: function (html) {
+                    $('#add-edit-template').html(html);
+                }
+            })
+        }
         if (args.action === "add") {
             add(args.data);
         }

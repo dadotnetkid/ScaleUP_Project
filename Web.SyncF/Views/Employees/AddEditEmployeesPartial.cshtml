@@ -1,0 +1,84 @@
+﻿@model Employees
+@{
+    var url = Model != null ? Url.Action("EditEmployeesGridPartial", new { id = Model?.Id }) : Url.Action("AddEmployeesGridPartial");
+}
+<ejs-dialog id="default_dialog" width="600px"
+            showCloseIcon="true" header="Add Edit Employee"
+            close="onClose">
+    <e-content-template>
+        <form data-ajax-url="@url" data-ajax="true" data-ajax-method="post" id="frm-add-edit-employee" data-ajax-success="onComplete">
+            <div class="row">
+                <div class="col-lg-12">
+                    <label asp-for="FirstName">First Name</label>
+                    <input class="form-control" asp-for="FirstName" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <label asp-for="MiddleName">Middle Name</label>
+                    <input class="form-control" asp-for="MiddleName" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <label asp-for="LastName">Last Name</label>
+                    <input class="form-control" asp-for="LastName" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <button class="btn btn-primary">Submit</button>
+                </div>
+            </div>
+        </form>
+    </e-content-template>
+    <e-dialog-buttons>
+        <e-dialog-dialogbutton buttonModel="ViewBag.button"></e-dialog-dialogbutton>
+    </e-dialog-buttons>
+</ejs-dialog>
+<script>
+    $(document).ready(function() {
+        var dialogObj = document.getElementById("default_dialog");
+       // onSubmit();
+    });
+
+    function onClose(args) {
+        $.ajax({
+            url: "@Url.Action("EmployeesGridPartial")",
+            success: function (html) {
+                $('#default_dialog').replaceWith("");
+                $('#container').html(html);
+            }
+        })
+
+    }
+
+    function onSubmit() {
+        $("#frm-add-edit-employee").submit(function(e) {
+
+            e.preventDefault(); // avoid to execute the actual submit of the form.
+
+            var form = $(this);
+            var url = form.attr('action');
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: form.serialize(), // serializes the form's elements.
+                success: function(data) {
+                    $()
+                    $('#container').html(data); // show response from the php script.
+                }
+            });
+
+
+        });
+    }
+
+    onComplete = function(args) {
+        $('#container').html(args); 
+        var dialog = document.getElementById("default_dialog").ej2_instances[0];
+        dialog.close();
+    }
+</script>
+<ejs-scripts></ejs-scripts>
